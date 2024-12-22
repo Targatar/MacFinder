@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <conio.h>
 #include <fstream>
+#include <set>
+#include <algorithm>
+#include <iterator>
 
 typedef struct //struct for menu output
 {
@@ -55,17 +58,12 @@ MENU cl_operation_menu(char cl_operation_command) //menu for file operations
 }
 
 std::vector<std::string> coincidence(std::vector<std::string> first_file_content, std::vector<std::string>second_file_content)
-{
-    std::vector<std::string> result_vector;
-    for (int i = 0; i < first_file_content.size(); i++)
-    {
-        for (int n = 0; n < second_file_content.size(); n++)
-        {
-            if (first_file_content[i] == second_file_content[n])
-                result_vector.push_back(first_file_content[i]);
-        }
-
-    }
+{    
+    std::set<std::string> ff_content(first_file_content.begin(), first_file_content.end());
+    std::set<std::string> sf_content(second_file_content.begin(), second_file_content.end());
+    std::set<std::string> result_set;
+    std::set_intersection(begin(ff_content), end(ff_content), begin(sf_content), end(sf_content), std::inserter(result_set, begin(result_set)));
+    std::vector<std::string> result_vector(result_set.begin(), result_set.end());
     return result_vector;
 }
 
@@ -85,6 +83,7 @@ std::vector<std::string> open_file(std::string file_path) //open file & translat
     else
     {
         std::cout << "File open error" << std::endl;
+        exit(0);
     }
     
 }
